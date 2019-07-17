@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<h1>Games</h1>
+<p><a href='/addgame'>Add a Game to Database</a></p>
+
+{% if games|length == 0 %}
+<p>No games found.</p>
+{% else %}
+<table>
+    <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Genre</th>
+        <th>Platform</th>
+        <th>Price</th>
+        <th>Stock</th>
+        <th>Amount Sold</th>
+    </tr>
+
+    {% for game in games %}
+    <tr>
+        <td>{{game.id}}</td>
+        <td>{{game.title}}</td>
+        <td>{{game.genre}}</td>
+        <td>{{game.platform}}</td>
+        <td>{{game.price}}</td>
+        <td>{{game.stock}}</td>
+        <td>{{game.amount_sold}}</td>
+    </tr>
+    {% endfor %}
+{% endif %}
+
+</table>
+
+
+{% endblock %}

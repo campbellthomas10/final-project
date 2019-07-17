@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<h1>Add Game to Database</h1>
+
+<form method='POST'>
+    <table>
+        <tr>
+            <td><label for='title'>Title: </label></td>
+            <td><input type='text' name='title' required></td>
+        </tr>
+        <tr>
+            <td><label for='genre'>Genre: </label></td>
+            <td><input type='text' name='genre' required></td>
+        </tr>
+        <tr>
+            <td><label for='platform'>Platform: </label></td>
+            <td><input type='text' name='platform' required></td>
+        </tr>
+        <tr>
+            <td><label for='price'>Price: </label></td>
+            <td><input name='price' type='text' required></td>
+        </tr>
+    </table>
+    <input type='submit' value='Add'>
+</form>
+
+
+{% endblock %}
