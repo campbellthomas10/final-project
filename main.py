@@ -34,6 +34,9 @@ class Game(db.Model):
         self.platform = platform
         self.price = price
 
+    def __repr__(self):
+        return '<Title: ' + self.title +'>'
+
 
 
 
@@ -67,6 +70,9 @@ def require_login():
     allowed_routes = ['login','register']
     if request.endpoint not in allowed_routes and 'email' not in session:
         return redirect('/login')
+
+
+    
 
 
 #Register Account
@@ -114,23 +120,40 @@ def login():
         customer = Customer.query.filter_by(email=email).first()
         if customer and customer.password == password:
             session['email'] = email
+            session['flip'] = 0
             return redirect('/stock')
         else:
             flash("Incorrect password, or user doesn't exist.", 'error')
     return render_template('login.html', title='Login')
 
+
+
 #Logout route
 @app.route('/logout')
 def logout():
     del session['email']
+    if 'flip' in session:
+        del session['flip']
     return redirect('/login')
 
 #Route to the stock page
 @app.route('/stock', methods=['POST', 'GET'])
 def stock():
-    # if request.method == 'POST'
-    games = Game.query.all()
-    return render_template('stock.html', title="Stock", games=games)
+    try:
+        if request.method == 'POST':
+            if session['flip'] % 2 == 0:
+                order = True
+                session['flip'] += 1
+            else:
+                order = False 
+                session['flip'] += 1
+        games = Game.query.all()
+        return render_template('stock.html', title="Stock", games=games, order=order)
+
+    except UnboundLocalError:
+        order = False
+        games = Game.query.all()
+        return render_template('stock.html', title="Stock", games=games, order=order)
 
 
 #Form to add game to the database
@@ -145,9 +168,28 @@ def add_game():
         new_game = Game(title, genre, platform, price)
         db.session.add(new_game)
         db.session.commit()
-        return redirect('/')
+        return redirect('/stock')
 
     return render_template('addgame.html',title='Add Game to Database')
+
+@app.route('/order', methods=['POST'])
+def order():
+    games = Game.query.all()
+    items = list()
+
+    for game in games:
+        id = str(game.id)
+        amount_ordered = request.form[id]
+        items.append(amount_ordered)
+
+    display_items = list()
+    for game in games:
+        amount = str(items.pop(0))
+        if amount != '0' and amount != '':
+            
+            display_items.append(game.title + ': ' + amount)
+
+    return render_template('order.html', title='Game Order', games=games, items=display_items)
 
 
 

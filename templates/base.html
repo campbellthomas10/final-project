@@ -3,12 +3,17 @@
 
     <head>
         <title>{{title}}</title>
-        <link rel='stylesheet' type='text/css' href="{ url_for('static', filename='style.css')}}">
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
     </head>
 
     <body>
+        {% if session %}
         <p><a href='/logout'>Logout</a></p>
-
+        <p>Logged in: {{session['email']}}</p>
+        {% else %}
+        <p><a href='/login'>Login</a> | <a href='/register'>Register</a></p>
+        {% endif %}
+        
         {% with messages = get_flashed_messages(with_categories=True) %}
         <ul>
         {% for category,message in messages %}
@@ -16,6 +21,11 @@
         {% endfor %}
         </ul>
         {% endwith %}
+
+
+ 
+ 
+
 
 
         {% block content %}

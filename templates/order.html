@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if games|length != 0 %}
+
+{% for item in items %}
+
+<p>{{item}}</p>
+
+{% endfor %}
+{% else %}
+<p>No games ordered!</p>
+{% endif %}
+
+
+
+{% endblock %}
